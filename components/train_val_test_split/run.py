@@ -4,9 +4,10 @@ This script splits the provided dataframe in test and remainder
 """
 import argparse
 import logging
+import tempfile
+
 import pandas as pd
 import wandb
-import tempfile
 from sklearn.model_selection import train_test_split
 from wandb_utils.log_artifact import log_artifact
 
@@ -31,11 +32,11 @@ def go(args):
         df,
         test_size=args.test_size,
         random_state=args.random_seed,
-        stratify=df[args.stratify_by] if args.stratify_by != 'none' else None,
+        stratify=df[args.stratify_by] if args.stratify_by != "none" else None,
     )
 
     # Save to output files
-    for df, k in zip([trainval, test], ['trainval', 'test']):
+    for df, k in zip([trainval, test], ["trainval", "test"]):
         logger.info(f"Uploading {k}_data.csv dataset")
         with tempfile.NamedTemporaryFile("w") as fp:
 
@@ -53,18 +54,32 @@ def go(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Split test and remainder")
 
-    parser.add_argument("input", type=str, help="Input artifact to split")
-
     parser.add_argument(
-        "test_size", type=float, help="Size of the test split. Fraction of the dataset, or number of items"
+        "input",
+        type=str,
+        help="Input artifact to split",
     )
 
     parser.add_argument(
-        "--random_seed", type=int, help="Seed for random number generator", default=42, required=False
+        "test_size",
+        type=float,
+        help="Size of the test split. Fraction of the dataset, or number of items",
     )
 
     parser.add_argument(
-        "--stratify_by", type=str, help="Column to use for stratification", default='none', required=False
+        "--random_seed",
+        type=int,
+        help="Seed for random number generator",
+        default=42,
+        required=False,
+    )
+
+    parser.add_argument(
+        "--stratify_by",
+        type=str,
+        help="Column to use for stratification",
+        default="none",
+        required=False,
     )
 
     args = parser.parse_args()
