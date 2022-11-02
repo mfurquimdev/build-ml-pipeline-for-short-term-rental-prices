@@ -34,6 +34,8 @@ modeling:
   # Output artifact
   output_artifact: "random_forest_export"
   trainval_artifact: "trainval_data.csv:latest"
+  test_artifact: "test_data.csv:latest"
+  mlflow_model: "random_forest_export:prod"
   # NOTE: you can put here any parameter that is accepted by the constructor of
   # RandomForestRegressor. This is a subsample, but more could be added:
   random_forest:
